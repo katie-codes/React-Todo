@@ -1,0 +1,98 @@
+const {Component} = React;
+
+/* functionality to add: 
+clear all,
+store in browser memory
+*/ 
+
+let id = 0;
+// state components
+class TodoApp extends Component {
+constructor(props) {
+  super(props); 
+  this.state = {itemsList: []};
+  this.updateList = this.updateList.bind(this);
+  this.toggleComplete = this.toggleComplete.bind(this);
+  this.clearEntries = this.clearEntries.bind(this);
+}
+ updateList(e) {
+   let newTodo = {
+     text: this._input.value,
+     id: id++,
+     completed: false
+   }
+   let updatedList = this.state.itemsList.concat([newTodo]);
+   this.setState({itemsList: updatedList});
+   e.preventDefault();
+   this._input.value = "";
+ }
+ toggleComplete(itemID) {
+ let mutableList = this.state.itemsList;
+   for (let obj in mutableList) {
+     if (mutableList[obj].id == itemID) {
+       mutableList[obj].completed = mutableList[obj].completed ===  true ? false : true;
+       break;
+     }
+   }
+   this.setState({itemsList: mutableList});
+   return;
+ }
+  clearEntries() {
+    this.setState({itemsList: []});
+  }
+render() {
+  return (
+    <div className="outer-main">
+  <div className="main">
+      <Heading />
+      <form onSubmit={this.updateList} >
+        <input type="text" ref={(node) => {this._input = node;}}/>
+        <button type="submit" >
+          Add ToDo
+        </button>  
+        </form>
+      <ClearLink clear={this.clearEntries}/>
+      <TodoList list={this.state.itemsList} updateCompletedStatus={this.toggleComplete}/>
+      </div>
+      </div>
+  )
+}
+}
+
+// comp components
+class Heading extends Component {
+  render() {
+    return (
+      <h1>Todo List</h1>
+      )
+  }
+}
+
+class ClearLink extends Component {
+  render() {
+    return (
+    <div className="clear" onClick={this.props.clear}>
+        Clear List
+        </div>
+    )
+  }
+}
+
+class TodoList extends Component {
+   handleComplete(e) {
+    let itemID = e.target.id;
+     this.props.updateCompletedStatus(itemID);
+  }
+  render() {
+    let items = this.props.list.map(item => {
+      return <li id={item.id} completed={item.completed} className={item.completed === true ? "complete" : " "} onClick={this.handleComplete.bind(this)}>{item.text}</li>
+    });
+    return (
+      <ul>
+        {items}
+        </ul>
+    )
+  }
+}
+
+ReactDOM.render(<TodoApp/>, document.getElementById("main"));
