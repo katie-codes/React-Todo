@@ -1,3 +1,5 @@
-A Pen created at CodePen.io. You can find this one at http://codepen.io/katie-codes/pen/oYdaqd.
+A simple todo list in React. 
+
+Try it out on Codepen: http://codepen.io/katie-codes/pen/oYdaqd.
 
  
